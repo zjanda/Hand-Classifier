@@ -7,6 +7,8 @@ import os
 import numpy as np
 from time import time
 
+from icecream import ic
+
 write = True
 reset = False
 
@@ -126,3 +128,12 @@ def setWriteResetFalse():
 # Detect if a point is inside the threshold
 # def in_threshold(centx, centy):
 #     return TH_TOPLEFT[0] < centx < TH_BOTRIGHT[0] and TH_TOPLEFT[1] < centy < TH_BOTRIGHT[1]
+
+
+def normalize_hand(hand: type(np.array([]))):
+    ic(hand.shape)
+    x = hand[:, 1] - np.min(hand[:, 1])
+    hand[:, 1] = x / np.max(x)
+    y = hand[:, 2] - np.min(hand[:, 2])
+    hand[:, 2] = y / np.max(y)
+    return hand

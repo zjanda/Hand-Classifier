@@ -41,9 +41,11 @@ def HandTrackingTesting():
                         #     cv2.circle(img, (centx, centy), 25, (255, 255, 0))
                     mpDraw.draw_landmarks(img, handLandMarks, mpHands.HAND_CONNECTIONS)  # draws 1 hand at a time
 
-                hand_coords = np.array(hand_coords)
+
+                hand_coords = np.array(hand_coords) * 1.0
+                normalize_hand(hand_coords)
                 predictions = model.predict(hand_coords)
-                if len(votes) == 100:
+                if len(votes) == 10:
                     results = countVotes(votes)
                     vote1 = results["first_vstats"][0]
                     conf1 = results["first_vstats"][1]
@@ -66,7 +68,7 @@ def HandTrackingTesting():
             fps.prevTime = fps.currTime
 
             # Draw threshold window
-            DrawRegion(img)
+            # DrawRegion(img)
 
             # image, text, pos, font, font size, color, thickness
             cv2.putText(img, str(int(fps.framesPerSecond)), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 0, 255), 3)

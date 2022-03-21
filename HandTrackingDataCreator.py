@@ -4,7 +4,7 @@ import helpers
 from helpers import *
 
 
-def HandTrackingDataCreator():
+def HandTrackingDataCreator(num_list):
     TIME_PER_HAND = 20
     start_up = 100
 
@@ -86,7 +86,7 @@ def HandTrackingDataCreator():
                 # FPS
                 elapsed_time = round(time() - fps.last_update_time, 1)
                 fps.currTime = time()
-                if elapsed_time >= fps.UPDATE_INTERVAL:
+                if elapsed_time >= fps.UPDATE_FREQ:
                     fps.last_update_time = time()
                     fps.framesPerSecond = 1 / (fps.currTime - fps.prevTime)
                 fps.prevTime = fps.currTime
