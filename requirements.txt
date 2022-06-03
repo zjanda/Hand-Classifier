@@ -1,0 +1,11 @@
+torch
+torchvision
+pandas
+numpy
+sklearn
+tqdm
+icecream
+cv2
+mediapipe
+xgboost
+tkinter

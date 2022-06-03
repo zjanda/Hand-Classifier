@@ -1,18 +1,21 @@
 from helpers import *
 from tkinter.ttk import *
+import os
 from multiprocessing import Process
 from HandTrackingTesting import HandTrackingTesting
 from HandTrackingDataCreator import HandTrackingDataCreator
 
 
-#!/bin/python
+# !/bin/python
 # os.system('python3 HandTrackingDataCreator.py')
 def runRecordData():
     rec_data_window = Tk()
     num_list = []
+
     def selectNumFingers(value):
         global num_list
         num_list.append(value)
+
     Label(rec_data_window, text='Select fingers to record')
     Checkbutton(rec_data_window, text='0', command=lambda *argv: selectNumFingers(0))
     Checkbutton(rec_data_window, text='1', command=lambda *argv: selectNumFingers(1))
@@ -26,8 +29,13 @@ def runRecordData():
 
 
 def runTrainModel():
-    print(os.system('jupyter nbconvert --to script modeltrain.ipynb'))
-    import modeltrain
+    try:
+        import DNNmodeltrain
+    except ModuleNotFoundError:
+        print('No model trained...')
+        print('Generating model training instructions...')
+        print(os.system('jupyter nbconvert --to script DNNmodeltrain.ipynb'))
+        print('File created. Please try again.')
 
 
 def runTestModel():

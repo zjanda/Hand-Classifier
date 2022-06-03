@@ -15,7 +15,7 @@ def HandTrackingTesting():
     fps = FPS()
 
     # load model
-    model = load_model('finalized_model.sav')
+    model = load_model('finalized_model.pth')
     votes = []
     string1 = ''
     string2 = ''
@@ -41,10 +41,14 @@ def HandTrackingTesting():
                         #     cv2.circle(img, (centx, centy), 25, (255, 255, 0))
                     mpDraw.draw_landmarks(img, handLandMarks, mpHands.HAND_CONNECTIONS)  # draws 1 hand at a time
 
-
-                hand_coords = np.array(hand_coords) * 1.0
+                # Model prediction
+                hand_coords = torch.tensor(hand_coords) * 1.0
                 normalize_hand(hand_coords)
-                predictions = model.predict(hand_coords)
+                hand_coords = hand_coords.reshape(1, -1)
+                outputs = model(hand_coords)
+
+                _, predictions = torch.max(outputs, 1)
+
                 if len(votes) == 10:
                     results = countVotes(votes)
                     vote1 = results["first_vstats"][0]

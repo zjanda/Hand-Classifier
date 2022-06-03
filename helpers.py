@@ -1,16 +1,35 @@
-import pickle
 import tkinter.messagebox
 from tkinter import *
 from tkinter.ttk import *
 import cv2
-import os
+import torch
+import torch.nn as nn
 import numpy as np
 from time import time
 
-from icecream import ic
-
 write = True
 reset = False
+
+input_size = 21 * 3  # 16 * 14
+hidden_size = 50
+num_classes = 6
+num_epochs = 3
+batch_size = 100
+learning_rate = .01
+
+
+class NeuralNet(nn.Module):
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(NeuralNet, self).__init__()
+        self.linear1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.LeakyReLU()
+        self.linear2 = nn.Linear(hidden_size, num_classes)
+
+    def forward(self, x):
+        out = self.linear1(x)
+        out = self.relu(out)
+        out = self.linear2(out)
+        return out
 
 
 # FPS vars
@@ -32,13 +51,20 @@ class FingerTimer:
     num_fingers = seconds_passed // TIME_PER_HAND
 
 
-
 def save_model(model, filename):
-    pickle.dump(model, open(filename, 'wb'))
+    torch.save(model, filename)
 
 
 def load_model(filename):
-    return pickle.load(open(filename, 'rb'))
+    model = NeuralNet(input_size, hidden_size, num_classes)
+    # if filename:
+    #     import pickle
+    #     with open(filename, 'rb') as f:
+    #         obj = f.read()
+    #     weights = {key: arr for key, arr in pickle.loads(obj, encoding='latin1').items()}
+    #     model.load_state_dict(weights)
+    model.load_state_dict(torch.load(filename))
+    return model
 
 
 def DrawRegion(img):
@@ -93,21 +119,24 @@ def PromptOverwrite():
                         reset = value
                         reset_window.destroy()
 
-                    Button(reset_window, style='W.TButton', text="Yes", command=lambda *args: updateReset(True)).pack(pady=10)
-                    Button(reset_window, style='W.TButton', text="No", command=lambda *args: updateReset(False)).pack(pady=10)
+                    Button(reset_window, style='W.TButton', text="Yes", command=lambda *args: updateReset(True)).pack(
+                        pady=10)
+                    Button(reset_window, style='W.TButton', text="No", command=lambda *args: updateReset(False)).pack(
+                        pady=10)
 
                     mainloop()
                 else:
                     print('return')
                     return
+
             Button(master, style='W.TButton', text="Yes", command=lambda *args: updateWrite(True)).pack(pady=10)
             Button(master, style='W.TButton', text="No", command=lambda *args: updateWrite(False)).pack(pady=10)
             print('return 2')
+
             def on_closing():
                 # if tkinter.messagebox.askokcancel('Quit', 'Do you want to quit?'):
                 master.destroy()
                 exit(0)
-
 
             master.protocol('WM_DELETE_WINDOW', on_closing)
 
@@ -125,15 +154,15 @@ def setWriteResetFalse():
     with open('HandTrackingDataCreator.py', 'w') as file:
         file.write(string)
 
+
 # Detect if a point is inside the threshold
 # def in_threshold(centx, centy):
 #     return TH_TOPLEFT[0] < centx < TH_BOTRIGHT[0] and TH_TOPLEFT[1] < centy < TH_BOTRIGHT[1]
 
 
-def normalize_hand(hand: type(np.array([]))):
-    ic(hand.shape)
-    x = hand[:, 1] - np.min(hand[:, 1])
-    hand[:, 1] = x / np.max(x)
-    y = hand[:, 2] - np.min(hand[:, 2])
-    hand[:, 2] = y / np.max(y)
+def normalize_hand(hand):
+    x = hand[:, 1] - torch.min(hand[:, 1])
+    hand[:, 1] = x / torch.max(x)
+    y = hand[:, 2] - torch.min(hand[:, 2])
+    hand[:, 2] = y / torch.max(y)
     return hand
