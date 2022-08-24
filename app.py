@@ -1,31 +1,24 @@
-from helpers import *
-from tkinter.ttk import *
 import os
-from multiprocessing import Process
-from HandTrackingTesting import HandTrackingTesting
+
 from HandTrackingDataCreator import HandTrackingDataCreator
+from HandTrackingTesting import HandTrackingTesting
+from helpers import *
 
 
 # !/bin/python
 # os.system('python3 HandTrackingDataCreator.py')
 def runRecordData():
-    rec_data_window = Tk()
+    # rec_data_window = Tk()
     num_list = []
-
-    def selectNumFingers(value):
-        global num_list
-        num_list.append(value)
-
-    Label(rec_data_window, text='Select fingers to record')
-    Checkbutton(rec_data_window, text='0', command=lambda *argv: selectNumFingers(0))
-    Checkbutton(rec_data_window, text='1', command=lambda *argv: selectNumFingers(1))
-    Checkbutton(rec_data_window, text='2', command=lambda *argv: selectNumFingers(2))
-    Checkbutton(rec_data_window, text='3', command=lambda *argv: selectNumFingers(3))
-    Checkbutton(rec_data_window, text='4', command=lambda *argv: selectNumFingers(4))
-    Checkbutton(rec_data_window, text='5', command=lambda *argv: selectNumFingers(5))
-    p1 = Process(target=lambda *argv: HandTrackingDataCreator(num_list))
-    p1.start()
-    p1.join()
+    #
+    # Label(rec_data_window, text='Select fingers to record')
+    # Checkbutton(rec_data_window, text='0', command=lambda *argv: num_list.append(0))
+    # Checkbutton(rec_data_window, text='1', command=lambda *argv: num_list.append(1))
+    # Checkbutton(rec_data_window, text='2', command=lambda *argv: num_list.append(2))
+    # Checkbutton(rec_data_window, text='3', command=lambda *argv: num_list.append(3))
+    # Checkbutton(rec_data_window, text='4', command=lambda *argv: num_list.append(4))
+    # Checkbutton(rec_data_window, text='5', command=lambda *argv: num_list.append(5))
+    HandTrackingDataCreator(num_list)
 
 
 def runTrainModel():
@@ -35,13 +28,12 @@ def runTrainModel():
         print('No model trained...')
         print('Generating model training instructions...')
         print(os.system('jupyter nbconvert --to script DNNmodeltrain.ipynb'))
-        print('File created. Please try again.')
+        import DNNmodeltrain
+        # print('File created. Please try again.')
 
 
 def runTestModel():
-    p1 = Process(target=HandTrackingTesting)
-    p1.start()
-    p1.join()
+    HandTrackingTesting()
 
 
 if __name__ == '__main__':

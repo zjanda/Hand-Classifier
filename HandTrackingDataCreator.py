@@ -1,5 +1,5 @@
-from time import time
 import mediapipe as mp
+
 import helpers
 from helpers import *
 
@@ -16,6 +16,7 @@ def HandTrackingDataCreator(num_list):
 
     # setWriteResetFalse()  # to not overwrite data on accident
     append = write and not reset
+
     # Displaying line number upon appending allows for user to know where to delete from data.txt
     # if recording data was unsuccessful
     # Possible additions to code would be to automate clearing data after this line number upon early termination.
@@ -77,9 +78,9 @@ def HandTrackingDataCreator(num_list):
                     fingerTimer.time_elapsed = int(fingerTimer.cur_time - fingerTimer.start)
                     # fingerTimer.num_fingers = fingerTimer.seconds_passed // TIME_PER_HAND
 
-            ################################################################################################################
+            ############################################################################################################
             # DRAW IMAGE
-            ################################################################################################################
+            ############################################################################################################
             h, w, c = img.shape
 
             if start_up == 0:
@@ -129,7 +130,7 @@ def HandTrackingDataCreator(num_list):
 
             # Draw threshold window for hand positioning.
             # Purpose: model will need unreasonably more data if hand position is not restricted.
-            DrawRegion(img)
+            # DrawRegion(img)
             cv2.imshow("Image", img)
             k = cv2.waitKey(1)
 

@@ -5,7 +5,7 @@ numpy
 sklearn
 tqdm
 icecream
-cv2
+opencv-python
 mediapipe
 xgboost
-tkinter
+tk

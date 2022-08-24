@@ -1,19 +1,20 @@
-import tkinter.messagebox
+from time import time
 from tkinter import *
 from tkinter.ttk import *
+
 import cv2
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-from time import time
 
 write = True
 reset = False
 
+device = 'cpu'
 input_size = 21 * 3  # 16 * 14
 hidden_size = 50
 num_classes = 6
-num_epochs = 3
+num_epochs = 50
 batch_size = 100
 learning_rate = .01
 
