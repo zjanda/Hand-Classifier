@@ -24,6 +24,10 @@ def HandTrackingTesting():
     with open('data.txt', 'a') as file:
         while True:
             success, img = cap.read()
+            if not success:
+                print("\rFailed to capture image from camera. Please check if the camera is connected and on.", end="", flush=True)
+                continue
+
             img = cv2.flip(img, 1)
             imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             results = hands.process(imgRGB)
